@@ -86,6 +86,10 @@ export function createSVG({
         },
     }
     let isSpecificHours = gdsc.event.hours == 0;
+    let attendeeFieldRemoveLastField = "";
+    if (isSpecificHours) {
+        attendeeFieldRemoveLastField = attendee.split("\t").slice(0, -1).join("\t");
+    }
 
 
     // 
@@ -172,7 +176,6 @@ export function createSVG({
         
         // 參與者的第四欄是隱藏欄位，用來放個別參與者的時數
         // 如果「核發時數」設 0 則會觸發使用參與者的第四欄位，所以在這裡呈現的參與者資訊需去除最後一個（第四欄）欄位
-        let attendeeFieldRemoveLastField = attendee.split("\t").slice(0, -1).join("\t");
         text.textContent = `${isSpecificHours ? attendeeFieldRemoveLastField : attendee} 活動參與時數證明`;
         text.setAttribute("fill", "#FFF");
         svg.append(text);
@@ -335,8 +338,6 @@ export function createSVG({
             let month = gdsc.event.date.getMonth() + 1;
             certificate_id = `${gdsc.year}-${year}${month<10 ? `0${month}` : month}-${gdsc.event.type}-${gdsc.event.slug}-${page}`;
             text.textContent = `證書編號：${certificate_id} of ${totalPage}`;
-            
-            // text.textContent = `證書編號：${gdsc.year}-${}-${gdsc.event.type}-${gdsc.event.slug}-${page} of ${totalPage}`;
             svg.append(text);
         }
     }
@@ -346,7 +347,7 @@ export function createSVG({
     // 
     {
         let qrcodeSvgString = new QRcode({
-            content: `${certificate_id}-${attendee.replace( /\s/g, "-" )}`,
+            content: `${certificate_id}-${isSpecificHours ? attendeeFieldRemoveLastField.replace( /\s/g, "-" ) : attendee.replace( /\s/g, "-" )}`,
             background: "transparent",
         }).svg();
         let qrcodeSvg = new DOMParser().parseFromString(

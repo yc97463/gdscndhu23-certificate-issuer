@@ -109,7 +109,7 @@ export function createSVG({
         // place at the center
         img.setAttribute("x", "47.72");
         img.setAttribute("y", "50");
-        img.setAttribute("href", "/gdsc-banner.png");
+        img.setAttribute("href", "./gdsc-banner.png");
         svg.appendChild(img);
     }
 

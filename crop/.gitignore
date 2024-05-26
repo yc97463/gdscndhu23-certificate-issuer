@@ -1,1 +1,4 @@
 myenv/
+extracted_certificates/
+qr_code_images/
+.DS_Store

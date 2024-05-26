@@ -10,7 +10,7 @@ function App() {
   const [date, setDate] = useState(today.replace(/\//g, "-"));
   const [time, setTime] = useState("00:00-00:00");
   const [place, setPlace] = useState("__活動地點__");
-  const [hours, setHours] = useState("1");
+  const [hours, setHours] = useState(1);
   const [url, setUrl] = useState("https://gdsc.community.dev/xxXxXXx");
   const [realm, setRealm] = useState("多元進取" as "多元進取" | "專業成長" | "服務奉獻");
   const [issuer, setIssuer] = useState("油成 YC");
@@ -24,7 +24,7 @@ function App() {
     setDate(today.replace(/\//g, "-"));
     setTime("00:00-00:00");
     setPlace("__活動地點__");
-    setHours("1");
+    setHours(1);
     setUrl("https://gdsc.community.dev/xxXxXXx");
     setRealm("多元進取");
   }
@@ -162,7 +162,8 @@ function App() {
                 type="number"
                 value={hours}
                 id="hours"
-                onChange={(e) => setHours(e.target.value)}
+                min={0}
+                onChange={(e) => setHours(e.target.valueAsNumber)}
                 className="w-full p-2 bg-slate-50 border-2 border-slate-300 rounded-md focus:outline-none focus:border-slate-500 transition-colors duration-200 ease-in-out"
               />
             </div>

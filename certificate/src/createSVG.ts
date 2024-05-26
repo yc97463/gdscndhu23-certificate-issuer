@@ -13,7 +13,7 @@ export default function createSVGs({
     date: string;
     time: string;
     place: string;
-    hours: string;
+    hours: number;
     url: string;
     realm: string;
     issuer: string;
@@ -51,7 +51,7 @@ export function createSVG({
     date: string;
     time: string;
     place: string;
-    hours: string;
+    hours: number;
     url: string;
     realm: string;
     issuer: string;
@@ -85,6 +85,8 @@ export function createSVG({
             realm: realm,
         },
     }
+    let isSpecificHours = gdsc.event.hours == 0;
+
 
     // 
     // 背景
@@ -138,9 +140,9 @@ export function createSVG({
         let title = `${gdsc.event.name} (${gdsc.event.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })})`;
         let title1 = title;
         let title2 = "";
-        if (title.length > 30) {
-            title1 = title.slice(0, 30);
-            title2 = title.slice(30);
+        if (title.length > 22) {
+            title1 = title.slice(0, 22);
+            title2 = title.slice(22);
         }
         text.textContent = title1;
         text.setAttribute("fill", "#FFF");
@@ -163,10 +165,15 @@ export function createSVG({
     // 
     {
         let text = document.createElementNS(svgns, "text");
+
         text.setAttribute("x", "120");
         text.setAttribute("y", "420");
         text.style.fontSize = "15px";
-        text.textContent = `${attendee} 活動參與時數證明`;
+        
+        // 參與者的第四欄是隱藏欄位，用來放個別參與者的時數
+        // 如果「核發時數」設 0 則會觸發使用參與者的第四欄位，所以在這裡呈現的參與者資訊需去除最後一個（第四欄）欄位
+        let attendeeFieldRemoveLastField = attendee.split("\t").slice(0, -1).join("\t");
+        text.textContent = `${isSpecificHours ? attendeeFieldRemoveLastField : attendee} 活動參與時數證明`;
         text.setAttribute("fill", "#FFF");
         svg.append(text);
     }
@@ -239,11 +246,15 @@ export function createSVG({
         text.setAttribute("fill", "#FFF");
         svg.append(text);
 
+        // 活動時數
+        // 如果是特定時數，則使用參與者第四欄的時數
+        let hoursFromAttendeeField = attendee.split("\t").slice(-1)[0];
+
         text = document.createElementNS(svgns, "text");
         text.setAttribute("x", "120");
         text.setAttribute("y", `${540+ (is2Line ? 20 : 0)}`);
         text.style.fontSize = "15px";
-        text.textContent = `活動時數：${gdsc.event.realm} ${gdsc.event.hours} 小時`;
+        text.textContent = `活動時數：${gdsc.event.realm} ${isSpecificHours ? hoursFromAttendeeField : gdsc.event.hours} 小時`;
         text.setAttribute("fill", "#FFF");
         svg.append(text);
     }
